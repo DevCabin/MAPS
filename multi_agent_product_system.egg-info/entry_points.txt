@@ -1,0 +1,2 @@
+[console_scripts]
+product-listing-system = multi_agent_product_system.examples.usage_examples:main

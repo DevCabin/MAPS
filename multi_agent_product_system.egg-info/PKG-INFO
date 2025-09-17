@@ -1,0 +1,343 @@
+Metadata-Version: 2.4
+Name: multi-agent-product-system
+Version: 1.0.0
+Summary: A comprehensive multi-agent system for automated product listing generation
+Home-page: https://github.com/company/multi-agent-product-system
+Author: AI Development Team
+Author-email: dev@company.com
+Classifier: Development Status :: 4 - Beta
+Classifier: Intended Audience :: Developers
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Requires-Python: >=3.8
+Description-Content-Type: text/markdown
+Requires-Dist: pydantic>=2.0.0
+Requires-Dist: asyncio-throttle>=1.0.2
+Requires-Dist: aiohttp>=3.8.0
+Requires-Dist: replicate>=0.15.0
+Requires-Dist: openai>=1.0.0
+Requires-Dist: Pillow>=9.0.0
+Requires-Dist: beautifulsoup4>=4.11.0
+Requires-Dist: lxml>=4.9.0
+Requires-Dist: requests>=2.28.0
+Requires-Dist: sqlalchemy>=2.0.0
+Requires-Dist: alembic>=1.8.0
+Requires-Dist: pytest>=7.0.0
+Requires-Dist: pytest-asyncio>=0.21.0
+Requires-Dist: pytest-mock>=3.10.0
+Requires-Dist: black>=22.0.0
+Requires-Dist: isort>=5.10.0
+Requires-Dist: mypy>=1.0.0
+Requires-Dist: gunicorn>=20.1.0
+Requires-Dist: uvicorn[standard]>=0.20.0
+Requires-Dist: fastapi>=0.95.0
+Provides-Extra: dev
+Requires-Dist: pytest>=7.4.0; extra == "dev"
+Requires-Dist: pytest-asyncio>=0.21.0; extra == "dev"
+Requires-Dist: black>=23.0.0; extra == "dev"
+Requires-Dist: isort>=5.12.0; extra == "dev"
+Requires-Dist: mypy>=1.5.0; extra == "dev"
+Provides-Extra: ai
+Requires-Dist: openai>=1.3.0; extra == "ai"
+Provides-Extra: yaml
+Requires-Dist: PyYAML>=6.0.1; extra == "yaml"
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: home-page
+Dynamic: provides-extra
+Dynamic: requires-dist
+Dynamic: requires-python
+Dynamic: summary
+
+# Multi-Agent Product Listing System
+
+A comprehensive automated system for creating product listings using specialized AI agents with **Replicate nano-banana** integration for high-quality image generation.
+
+## 🚀 Features
+
+- **Multi-Agent Architecture**: Specialized agents for each workflow stage
+- **Replicate Integration**: Advanced image generation using Google's nano-banana model
+- **Web Scraping**: Extract product details from URLs
+- **AI Enhancement**: Improve product descriptions with OpenAI
+- **Shopify Ready**: Direct e-commerce platform integration
+- **Type Safe**: Full Pydantic validation and type hints
+- **Production Ready**: Comprehensive error handling and logging
+- **Async Support**: Non-blocking operations for better performance
+
+## 🏗️ System Architecture
+
+```
+┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│   Description   │    │     Image       │    │   E-commerce    │
+│     Agent       │───►│   Generation    │───►│     Agent       │
+│                 │    │     Agent       │    │                 │
+│ • Web scraping  │    │ • Replicate API │    │ • Shopify API   │
+│ • AI enhancement│    │ • nano-banana   │    │ • Product format│
+└─────────────────┘    └─────────────────┘    └─────────────────┘
+```
+
+## 📦 Installation
+
+### Quick Start
+
+1. **Clone or extract the package**
+   ```bash
+   tar -xzf multi-agent-product-system.tar.gz
+   cd multi_agent_product_system
+   ```
+
+2. **Install dependencies**
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+3. **Configure API keys**
+   ```bash
+   cp .env.sample .env
+   # Edit .env with your API keys (see Configuration section)
+   ```
+
+4. **Install the package**
+   ```bash
+   pip install -e .
+   ```
+
+## ⚙️ Configuration
+
+### Required API Keys
+
+1. **Replicate API Token** (Required for image generation)
+   - Get token: https://replicate.com/account/api-tokens
+   - Set in `.env`: `REPLICATE_API_TOKEN=r8_your_token_here`
+
+2. **OpenAI API Key** (Optional, for description enhancement)
+   - Get key: https://platform.openai.com/api-keys
+   - Set in `.env`: `OPENAI_API_KEY=sk-your_key_here`
+
+3. **Shopify Credentials** (Optional, for e-commerce integration)
+   - API Key, Secret, and Store URL
+   - Set in `.env` file
+
+### Environment Configuration
+
+```bash
+# .env file example
+REPLICATE_API_TOKEN=r8_your_replicate_token_here
+OPENAI_API_KEY=sk-your_openai_key_here
+
+# Image Generation Settings (Replicate nano-banana)
+IMAGE_WIDTH=1024
+IMAGE_HEIGHT=1024
+IMAGE_STEPS=20
+IMAGE_GUIDANCE=7.5
+
+# Shopify Integration (optional)
+SHOPIFY_API_KEY=your_shopify_api_key
+SHOPIFY_SECRET=your_shopify_secret
+SHOPIFY_STORE_URL=your-store.myshopify.com
+```
+
+## 🔧 Usage
+
+### Basic Usage
+
+```python
+from multi_agent_product_system import ProductListingOrchestrator
+from multi_agent_product_system.config.configuration import initialize_config
+
+# Initialize configuration
+config = initialize_config()
+
+# Create orchestrator
+orchestrator = ProductListingOrchestrator(config)
+
+# Generate listing from description
+result = await orchestrator.process_product_listing(
+    product_description="Eco-friendly bamboo water bottle"
+)
+
+# Output in XML format
+print(result.to_xml())
+```
+
+### Output Format
+
+```xml
+<product_listing>
+  <description>Enhanced product description with marketing copy</description>
+  <image_url>https://replicate.delivery/generated-image-url</image_url>
+  <shopify_ready>true</shopify_ready>
+</product_listing>
+```
+
+### Advanced Usage
+
+```python
+# Custom image generation parameters
+image_params = {
+    "width": 1024,
+    "height": 1024,
+    "steps": 30,
+    "guidance": 8.0,
+    "seed": 42
+}
+
+result = await orchestrator.process_product_listing(
+    product_description="Premium leather handbag",
+    image_generation_params=image_params
+)
+
+# Process from URL
+result = await orchestrator.process_product_listing(
+    product_url="https://example-store.com/product"
+)
+```
+
+## 📚 Documentation
+
+- **Configuration Guide**: See `config/configuration.py` for all settings
+- **Usage Examples**: Check `examples/replicate_usage_examples.py`
+- **API Reference**: Each agent has comprehensive docstrings
+- **Error Handling**: Built-in retry logic and graceful degradation
+
+## 🔧 Replicate nano-banana Model
+
+This system uses Google's nano-banana model via Replicate for image generation:
+
+- **Model**: `google/nano-banana`
+- **Quality**: High-resolution product images
+- **Speed**: Fast generation times (~10-20 seconds)
+- **Cost**: Approximately $0.00025 per image
+- **Parameters**: Customizable width, height, steps, guidance, and seed
+
+### Supported Parameters
+
+```python
+{
+    "width": 512-2048,        # Image width
+    "height": 512-2048,       # Image height  
+    "num_inference_steps": 1-100,  # Quality vs speed
+    "guidance_scale": 0-20,   # Prompt adherence
+    "seed": -1 or int        # Reproducibility
+}
+```
+
+## 🎯 Agent Details
+
+### Description Agent
+- Web scraping with BeautifulSoup
+- AI-powered description enhancement
+- Product detail extraction
+- SEO optimization
+
+### Image Generation Agent  
+- Replicate nano-banana integration
+- Custom parameter support
+- Image quality validation
+- Cost estimation
+
+### E-commerce Agent
+- Shopify API integration
+- Product listing formatting
+- Inventory management
+- SEO metadata
+
+## 🚢 Deployment
+
+### Vercel Deployment
+
+```bash
+# Install Vercel CLI
+npm install -g vercel
+
+# Deploy
+vercel
+
+# Set environment variables in Vercel dashboard
+# REPLICATE_API_TOKEN, OPENAI_API_KEY, etc.
+```
+
+### Docker Deployment
+
+```dockerfile
+FROM python:3.9-slim
+
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+
+COPY . .
+RUN pip install -e .
+
+EXPOSE 8000
+CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]
+```
+
+## 📋 Requirements
+
+- Python 3.8+
+- Replicate API access
+- OpenAI API (optional)
+- Shopify store (optional)
+
+## 🛠️ Development
+
+```bash
+# Install development dependencies
+pip install -e ".[dev]"
+
+# Run tests
+pytest
+
+# Code formatting
+black .
+isort .
+
+# Type checking
+mypy .
+```
+
+## 📈 Performance
+
+- **Processing Time**: 30-60 seconds per product
+- **Image Generation**: 10-20 seconds (Replicate nano-banana)
+- **Concurrent Processing**: Supported with async/await
+- **Error Recovery**: Automatic retry with exponential backoff
+
+## 🔒 Security
+
+- API key validation and masking
+- Input sanitization for web scraping
+- Secure environment variable handling
+- Rate limiting for external APIs
+
+## 📄 License
+
+MIT License - See LICENSE file for details
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests
+5. Submit a pull request
+
+## 📞 Support
+
+- **Issues**: GitHub Issues
+- **Documentation**: Check docstrings and examples
+- **Replicate Help**: https://replicate.com/docs
+- **API Keys**: Ensure tokens are valid and have sufficient credits
+
+---
+
+**Ready to automate your product listings with AI-powered agents and Replicate's nano-banana model!** 🚀
