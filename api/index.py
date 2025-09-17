@@ -1,15 +1,6 @@
-from fastapi import FastAPI, Request, Form
-from fastapi.responses import HTMLResponse
-import asyncio
-
-# Initialize FastAPI
-app = FastAPI(title="Multi-Agent Product Listing System")
-
-@app.get("/")
-async def home():
-    """Serve the main demo page"""
-    return HTMLResponse("""
-<!DOCTYPE html>
+def handler(request):
+    """Vercel serverless function handler for home page"""
+    html_content = """<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -113,7 +104,11 @@ async def home():
             result.style.display = 'none';
 
             try {
-                const response = await fetch('/api/generate', { method: 'POST', body: new FormData(this) });
+                const response = await fetch('/api/generate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: new URLSearchParams(new FormData(this)).toString()
+                });
                 const data = await response.json();
 
                 document.getElementById('resultTitle').textContent = data.title;
@@ -130,60 +125,13 @@ async def home():
         });
     </script>
 </body>
-</html>
-""")
-
-@app.post("/generate")
-async def generate_listing(
-    product_description: str = Form(...),
-    custom_width: int = Form(1024),
-    custom_height: int = Form(1024),
-    custom_steps: int = Form(20),
-    custom_guidance: float = Form(7.5)
-):
-    """Mock generate a product listing"""
-    # Simulate processing time
-    await asyncio.sleep(2)
-
-    # Mock response data
-    mock_responses = [
-        {
-            "title": "Eco-Friendly Bamboo Water Bottle with Thermal Insulation",
-            "description": "Stay hydrated sustainably with our premium bamboo water bottle. Crafted from renewable bamboo with advanced thermal insulation technology that keeps drinks cold for 24 hours or hot for 12 hours. Features a leak-proof cap, wide mouth for easy cleaning, and comfortable carry strap. Perfect for hiking, office, gym, or daily use. 500ml capacity, BPA-free, and environmentally conscious.",
-            "image_url": "https://images.unsplash.com/photo-1602143407151-7111542de6e8?w=400&h=400&fit=crop",
-            "xml_output": """<product>
-  <title>Eco-Friendly Bamboo Water Bottle with Thermal Insulation</title>
-  <description>Stay hydrated sustainably with our premium bamboo water bottle...</description>
-  <image>https://images.unsplash.com/photo-1602143407151-7111542de6e8</image>
-  <price>29.99</price>
-  <tags>eco-friendly,bamboo,water-bottle,thermal,insulated,sustainable</tags>
-</product>"""
-        },
-        {
-            "title": "Premium Wireless Bluetooth Headphones",
-            "description": "Experience superior sound quality with our premium wireless Bluetooth headphones. Featuring active noise cancellation, 30-hour battery life, and comfortable over-ear design. Includes touch controls, voice assistant compatibility, and premium drivers for rich, immersive audio. Perfect for music lovers, commuters, and professionals.",
-            "image_url": "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=400&fit=crop",
-            "xml_output": """<product>
-  <title>Premium Wireless Bluetooth Headphones</title>
-  <description>Experience superior sound quality with our premium wireless...</description>
-  <image>https://images.unsplash.com/photo-1505740420928-5e560c06d30e</image>
-  <price>199.99</price>
-  <tags>wireless,bluetooth,headphones,noise-cancellation,premium</tags>
-</product>"""
-        }
-    ]
-
-    # Return a mock response
-    import random
-    response = random.choice(mock_responses)
+</html>"""
 
     return {
-        "success": True,
-        "title": response["title"],
-        "description": response["description"],
-        "image_url": response["image_url"],
-        "shopify_ready": True,
-        "xml_output": response["xml_output"],
-        "processing_time": "2.1 seconds",
-        "note": "This is a demo response. Set up API keys for real AI generation."
+        "statusCode": 200,
+        "headers": {
+            "Content-Type": "text/html",
+            "Access-Control-Allow-Origin": "*"
+        },
+        "body": html_content
     }
