@@ -1,16 +1,9 @@
 from fastapi import FastAPI, Request, Form
 from fastapi.responses import HTMLResponse
-from fastapi.templating import Jinja2Templates
-from pathlib import Path
 import asyncio
 
 # Initialize FastAPI
 app = FastAPI(title="Multi-Agent Product Listing System")
-
-# Setup templates
-templates = Path(__file__).parent.parent / "templates"
-templates.mkdir(exist_ok=True)
-templates = Jinja2Templates(directory=str(templates))
 
 @app.get("/")
 async def home():
